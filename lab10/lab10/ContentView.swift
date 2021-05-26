@@ -14,9 +14,8 @@ struct ContentView: View {
     @State  var DeadLineTime = Date()
     @State  var isFinished: Bool = true
     @State  var name: String = ""
-    
-    @State  var todoList: [fileData]?
-    
+
+    @State var todoList = [fileData]()
     
     var body: some View {
         
@@ -52,10 +51,22 @@ struct ContentView: View {
                 Text("讀取數據")
             }
             
+            
+            List(todoList) { todo in
+
+              VStack(alignment: .leading) {
+                Text("名稱: " + todo.name)
+                  .font(.headline)
+                Text("是否完成: "  + (todo.isFinished ? "是" : "否"))
+                  .font(.subheadline)
+                Text("到期時間: \(todo.deadlineTime)")
+                  .font(.subheadline)
+              }
+            }
+            
 
         }
-
-            
+       
     }
    
 }
@@ -83,12 +94,11 @@ extension ContentView {
                 
              guard let snapshot = snapshot else { return }
             
-             let data = snapshot.documents.compactMap { snapshot in
+             let todo = snapshot.documents.compactMap { snapshot in
                  try? snapshot.data(as: fileData.self)
-                
-                
              }
-            
+            self.todoList = todo
+                
          }
     }
     
